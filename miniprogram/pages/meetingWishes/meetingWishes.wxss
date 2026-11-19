@@ -1,0 +1,7 @@
+.page { min-height: 100vh; padding: 44rpx 30rpx 70rpx; box-sizing: border-box; background: linear-gradient(180deg, #ffe8f1, #fffafc); }
+.hero { padding: 18rpx 8rpx 32rpx; display: flex; flex-direction: column; }
+.eyebrow { color: #d878a0; font-size: 20rpx; letter-spacing: 4rpx; }
+.title { margin-top: 14rpx; color: #5b3544; font-size: 46rpx; font-weight: 700; }
+.subtitle { margin-top: 12rpx; color: #a87389; font-size: 26rpx; }
+.loading { margin-bottom: 22rpx; color: #c3839b; font-size: 25rpx; text-align: center; }
+.wish { margin-bottom: 18rpx; padding: 28rpx 30rpx; border-radius: 28rpx; background: rgba(255, 255, 255, .93); color: #704b5b; font-size: 30rpx; box-shadow: 0 12rpx 34rpx rgba(164, 77, 112, .07); }

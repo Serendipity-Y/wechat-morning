@@ -1,0 +1,37 @@
+<view class="page">
+  <view class="hero">
+    <text class="eyebrow">MEMORY PIECES</text>
+    <text class="title">我们的记忆碎片</text>
+    <text class="subtitle">不赶路的小事，也可以被好好记住。</text>
+  </view>
+  <view wx:if="{{loading}}" class="loading">正在翻今天的小记忆...</view>
+  <block wx:else>
+    <view class="search-box">
+      <input class="search-input" value="{{searchText}}" bindinput="searchMemories" placeholder="搜索记忆里的文字" confirm-type="search" />
+      <text class="search-count">{{matchedMemoryCount}} 条</text>
+    </view>
+    <view wx:if="{{!matchedMemoryCount}}" class="empty">没有找到相关记忆，换个词试试。</view>
+    <block wx:for="{{visibleMemoryGroups}}" wx:key="id" wx:for-item="group">
+      <view class="day-group">
+        <view class="day-head" data-id="{{group.id}}" bindtap="toggleMemoryGroup">
+          <view>
+            <text class="day-title">{{group.label}}</text>
+            <text class="day-count">{{group.items.length}} 条</text>
+          </view>
+          <text class="day-action">{{group.collapsed && !searchText ? '展开' : '收起'}}</text>
+        </view>
+        <view wx:if="{{group.collapsed && !searchText}}" class="day-summary">点这里展开这一天的记忆。</view>
+        <block wx:else>
+          <block wx:for="{{group.visibleItems}}" wx:key="id" wx:for-item="memory">
+            <view class="card">
+              <text class="index">{{memory.order}}</text>
+              <text class="copy" selectable="true">{{memory.text}}</text>
+            </view>
+          </block>
+          <view wx:if="{{group.hasMoreItems}}" class="more-in-group" data-id="{{group.id}}" bindtap="showMoreInGroup">继续显示这一天其余 {{group.remainingItemCount}} 条</view>
+        </block>
+      </view>
+    </block>
+    <view wx:if="{{hasMoreMemoryGroups}}" class="more-groups" bindtap="loadMoreGroups">加载更早日期</view>
+  </block>
+</view>

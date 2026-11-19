@@ -1,0 +1,8 @@
+<view class="page">
+  <view class="heart">♡</view>
+  <text class="title">这里有一份只给你的早安</text>
+  <text class="desc">输入主人分享的 24 位绑定码，以后打开这里，就会直接进入你的专属页面。</text>
+  <input class="code" maxlength="24" value="{{code}}" bindinput="onCodeInput" placeholder="粘贴绑定码" />
+  <view class="button {{binding ? 'disabled' : ''}}" bindtap="bindAccount">{{binding ? '正在绑定...' : '进入专属空间'}}</view>
+  <text class="privacy">不会读取手机号、位置、头像或昵称</text>
+</view>

@@ -1,0 +1,16 @@
+<view class="page">
+  <view class="hero">
+    <text class="eyebrow">LITTLE THINGS</text>
+    <text class="title">专属小事</text>
+    <text class="subtitle">把平常的小事记下来。</text>
+  </view>
+  <view wx:if="{{loading}}" class="loading">正在翻专属小事...</view>
+  <block wx:else>
+    <block wx:for="{{things}}" wx:key="*this">
+      <view class="thing">
+        <text class="dot"></text>
+        <text>{{item}}</text>
+      </view>
+    </block>
+  </block>
+</view>

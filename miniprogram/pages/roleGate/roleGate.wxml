@@ -1,0 +1,7 @@
+<view class="gate">
+  <view class="orb orb-one"></view>
+  <view class="orb orb-two"></view>
+  <view class="mark">YF</view>
+  <text class="title">正在为你打开专属空间</text>
+  <text class="dots">···</text>
+</view>

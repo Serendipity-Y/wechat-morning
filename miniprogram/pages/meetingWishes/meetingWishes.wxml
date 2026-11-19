@@ -1,0 +1,13 @@
+<view class="page">
+  <view class="hero">
+    <text class="eyebrow">NEXT TIME</text>
+    <text class="title">下次想一起做的事</text>
+    <text class="subtitle">不催促，只把期待轻轻放在这里。</text>
+  </view>
+  <view wx:if="{{loading}}" class="loading">正在把期待拿出来...</view>
+  <block wx:else>
+    <block wx:for="{{wishes}}" wx:key="*this">
+      <view class="wish">{{item}}</view>
+    </block>
+  </block>
+</view>

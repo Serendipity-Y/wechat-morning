@@ -1,0 +1,21 @@
+.page { min-height: 100vh; padding: 44rpx 30rpx 70rpx; box-sizing: border-box; background: linear-gradient(180deg, #ffe8f1, #fffafc); }
+.hero { padding: 18rpx 8rpx 32rpx; display: flex; flex-direction: column; }
+.eyebrow { color: #d878a0; font-size: 20rpx; letter-spacing: 4rpx; }
+.title { margin-top: 14rpx; color: #5b3544; font-size: 48rpx; font-weight: 700; }
+.subtitle { margin-top: 12rpx; color: #a87389; font-size: 26rpx; }
+.loading { margin-bottom: 22rpx; color: #c3839b; font-size: 25rpx; text-align: center; }
+.search-box { margin-bottom: 26rpx; padding: 8rpx 18rpx 8rpx 24rpx; display: flex; align-items: center; gap: 16rpx; border-radius: 24rpx; background: rgba(255, 255, 255, .92); border: 1rpx solid #ffdce8; box-shadow: 0 10rpx 28rpx rgba(164, 77, 112, .06); }
+.search-input { flex: 1; min-width: 0; height: 72rpx; color: #704b5b; font-size: 27rpx; }
+.search-count { flex: none; color: #c3839b; font-size: 23rpx; }
+.day-group { margin-bottom: 22rpx; }
+.day-head { padding: 20rpx 22rpx; display: flex; align-items: center; justify-content: space-between; gap: 20rpx; border-radius: 24rpx; background: rgba(255, 240, 246, .82); border: 1rpx solid #ffdce8; }
+.day-title { color: #8f506c; font-size: 28rpx; font-weight: 700; }
+.day-count { margin-left: 12rpx; color: #c3839b; font-size: 22rpx; }
+.day-action { flex: none; color: #c66f94; font-size: 24rpx; font-weight: 650; }
+.day-summary, .empty { padding: 24rpx; border-radius: 22rpx; background: rgba(255, 255, 255, .8); color: #a87389; font-size: 24rpx; line-height: 1.6; text-align: center; }
+.day-summary { margin-top: 12rpx; }
+.card { margin-top: 14rpx; padding: 30rpx; border-radius: 30rpx; display: flex; align-items: flex-start; background: rgba(255, 255, 255, .93); box-shadow: 0 12rpx 36rpx rgba(164, 77, 112, .08); }
+.index { width: 54rpx; height: 54rpx; border-radius: 50%; background: #fff0f6; color: #d878a0; display: flex; align-items: center; justify-content: center; font-size: 24rpx; flex-shrink: 0; }
+.copy { margin-left: 22rpx; color: #704b5b; font-size: 29rpx; line-height: 1.7; white-space: pre-wrap; word-break: break-all; }
+.more-in-group, .more-groups { margin-top: 14rpx; padding: 22rpx; border-radius: 22rpx; color: #c66f94; background: #fff0f6; border: 1rpx dashed #ffb8d1; text-align: center; font-size: 25rpx; font-weight: 650; }
+.more-groups { margin-top: 2rpx; background: #fff; }

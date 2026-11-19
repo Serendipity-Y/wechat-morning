@@ -1,0 +1,22 @@
+.gate {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(155deg, #e8f6ff 0%, #fff8ee 100%);
+}
+.orb { position: absolute; border-radius: 50%; filter: blur(4rpx); opacity: .7; }
+.orb-one { width: 360rpx; height: 360rpx; background: #bde8ff; top: -100rpx; right: -120rpx; }
+.orb-two { width: 300rpx; height: 300rpx; background: #ffd9c7; bottom: -80rpx; left: -100rpx; }
+.mark {
+  width: 118rpx; height: 118rpx; border-radius: 36rpx;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 40rpx; font-weight: 700;
+  background: linear-gradient(135deg, #2fa7ef, #ff8d74);
+  box-shadow: 0 18rpx 50rpx rgba(47, 167, 239, .22);
+}
+.title { margin-top: 34rpx; color: #334155; font-size: 29rpx; letter-spacing: 2rpx; }
+.dots { margin-top: 8rpx; color: #7aaed0; font-size: 38rpx; letter-spacing: 10rpx; }

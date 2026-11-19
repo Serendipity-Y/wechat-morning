@@ -1,0 +1,21 @@
+{
+  "pages": [
+    "pages/roleGate/roleGate",
+    "pages/bindPartner/bindPartner",
+    "pages/morningHome/morningHome",
+    "pages/morningAdmin/morningAdmin",
+    "pages/morningMemory/morningMemory",
+    "pages/meetingWishes/meetingWishes",
+    "pages/littleThings/littleThings"
+  ],
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarTitleText": "我的专属空间",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -1,0 +1,245 @@
+<view class="page">
+  <view class="intro">
+    <text class="eyebrow">MORNING SETTINGS</text>
+    <text class="title">{{contentEditor ? '编辑我们的专属内容' : '编辑早安设置'}}</text>
+    <view wx:if="{{!loading && !loadError}}" class="fold-toolbar">
+      <view class="fold-chip" bindtap="expandAllSections">全部展开</view>
+      <view class="fold-chip primary" bindtap="collapseAllSections">全部折叠</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">正在读取设置...</view>
+
+  <view wx:elif="{{loadError}}" class="load-error-card">
+    <text class="load-error-title">暂时无法读取内容</text>
+    <text class="load-error-text">{{loadError}}</text>
+    <button class="load-retry-btn" bindtap="retryLoad">重新加载</button>
+  </view>
+
+  <block wx:else>
+    <view wx:if="{{!contentEditor}}" class="card bind-card">
+      <view class="section-head">
+        <view class="section-title-wrap">
+          <text class="section-title">伴侣绑定</text>
+          <text class="section-tip">{{partnerBound ? '当前已绑定专属账号' : '尚未绑定专属账号'}}</text>
+        </view>
+        <view class="status {{partnerBound ? 'bound' : ''}}">{{partnerBound ? '已绑定' : '未绑定'}}</view>
+      </view>
+
+      <block wx:if="{{partnerBound}}">
+        <text class="card-note">同一时间只允许一个专属账号。解绑后旧账号无法再进入专属早安页，剩余订阅次数会清零；历史早安记录会保留，之后可生成新二维码更换绑定。</text>
+        <view class="bound-actions">
+          <text class="quota">剩余订阅次数：{{settings.subscriptionCount || 0}}</text>
+          <view class="unbind-btn {{unbinding ? 'disabled' : ''}}" bindtap="unbindPartner">{{unbinding ? '正在解绑...' : '解除当前绑定'}}</view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <text class="card-note">生成一次性绑定码，分享给伴侣扫码或粘贴绑定码，邀请 24 小时内有效。</text>
+        <view wx:if="{{invite}}" class="invite">
+          <image class="invite-qr" src="{{invite.qrUrl}}" mode="aspectFit" bindtap="previewInviteQr"></image>
+          <text class="invite-code" bindtap="copyInvite">{{invite.code}}</text>
+          <text class="invite-copy">点击绑定码复制；点击二维码可放大预览</text>
+          <view class="share-btn" bindtap="shareInviteQr">保存或分享二维码</view>
+        </view>
+        <view wx:else class="secondary-btn" bindtap="createInvite">生成绑定二维码</view>
+      </block>
+    </view>
+
+    <view class="card {{collapsedSections.memoryItems ? 'collapsed-card' : ''}}">
+      <view class="section-head">
+        <view class="section-title-wrap">
+          <text class="section-title">记忆碎片</text>
+          <text class="section-tip">{{memoryItems.length}} 条 · 按住拖动调整顺序</text>
+        </view>
+        <view class="collapse-btn" data-key="memoryItems" bindtap="toggleSection">
+          {{collapsedSections.memoryItems ? '展开编辑' : '收起'}}
+        </view>
+      </view>
+      <view wx:if="{{collapsedSections.memoryItems}}" class="collapsed-summary">已收起 {{memoryItems.length}} 条记忆，点“展开编辑”再调整内容。</view>
+      <block wx:else>
+        <block wx:for="{{memoryItems}}" wx:key="id">
+          <view class="sort-row memory-sort-row {{dragState && dragState.listKey == 'memoryItems' && dragState.currentIndex == index ? 'dragging' : ''}}">
+            <textarea
+              class="sort-textarea"
+              value="{{item.text}}"
+              data-list="memoryItems"
+              data-index="{{index}}"
+              bindinput="updateListItem"
+              disabled="{{saving || saveConflictRefreshing}}"
+              placeholder="写下一段记忆"
+              maxlength="120"
+              auto-height="true"
+            />
+            <view
+              wx:if="{{index > 0}}"
+              class="top-btn {{saving || saveConflictRefreshing ? 'disabled' : ''}}"
+              data-list="memoryItems"
+              data-index="{{index}}"
+              bindtap="moveListItemToTop"
+            >置顶</view>
+            <view
+              class="drag-handle {{saving || saveConflictRefreshing ? 'disabled' : ''}}"
+              data-list="memoryItems"
+              data-index="{{index}}"
+              catchtouchstart="startListDrag"
+              catchtouchmove="moveListDrag"
+              catchtouchend="endListDrag"
+              catchtouchcancel="endListDrag"
+            >拖动</view>
+            <view class="remove-btn {{saving || saveConflictRefreshing ? 'disabled' : ''}}" data-list="memoryItems" data-index="{{index}}" bindtap="removeListItem">删</view>
+          </view>
+        </block>
+        <view class="add-btn {{saving || saveConflictRefreshing ? 'disabled' : ''}}" data-list="memoryItems" bindtap="addListItem">+ 新增记忆</view>
+      </block>
+    </view>
+
+    <view class="card {{collapsedSections.meetingItems ? 'collapsed-card' : ''}}">
+      <view class="section-head">
+        <view class="section-title-wrap">
+          <text class="section-title">下次见面想做的事</text>
+          <text class="section-tip">{{meetingItems.length}} 条 · 第一项会显示在首页</text>
+        </view>
+        <view class="collapse-btn" data-key="meetingItems" bindtap="toggleSection">
+          {{collapsedSections.meetingItems ? '展开编辑' : '收起'}}
+        </view>
+      </view>
+      <view wx:if="{{collapsedSections.meetingItems}}" class="collapsed-summary">已收起 {{meetingItems.length}} 条想做的事，第一项保存后会出现在首页。</view>
+      <block wx:else>
+        <block wx:for="{{meetingItems}}" wx:key="id">
+          <view class="sort-row {{dragState && dragState.listKey == 'meetingItems' && dragState.currentIndex == index ? 'dragging' : ''}}">
+            <input
+              class="sort-input"
+              value="{{item.text}}"
+              data-list="meetingItems"
+              data-index="{{index}}"
+              bindinput="updateListItem"
+              disabled="{{saving || saveConflictRefreshing}}"
+              placeholder="写下一件想一起做的事"
+            />
+            <view
+              wx:if="{{index > 0}}"
+              class="top-btn {{saving || saveConflictRefreshing ? 'disabled' : ''}}"
+              data-list="meetingItems"
+              data-index="{{index}}"
+              bindtap="moveListItemToTop"
+            >置顶</view>
+            <view
+              class="drag-handle {{saving || saveConflictRefreshing ? 'disabled' : ''}}"
+              data-list="meetingItems"
+              data-index="{{index}}"
+              catchtouchstart="startListDrag"
+              catchtouchmove="moveListDrag"
+              catchtouchend="endListDrag"
+              catchtouchcancel="endListDrag"
+            >拖动</view>
+            <view class="remove-btn {{saving || saveConflictRefreshing ? 'disabled' : ''}}" data-list="meetingItems" data-index="{{index}}" bindtap="removeListItem">删</view>
+          </view>
+        </block>
+        <view class="add-btn {{saving || saveConflictRefreshing ? 'disabled' : ''}}" data-list="meetingItems" bindtap="addListItem">+ 新增想做的事</view>
+      </block>
+    </view>
+
+    <view class="card {{collapsedSections.littleItems ? 'collapsed-card' : ''}}">
+      <view class="section-head">
+        <view class="section-title-wrap">
+          <text class="section-title">专属小事</text>
+          <text class="section-tip">{{littleItems.length}} 条 · 按当前顺序展示</text>
+        </view>
+        <view class="collapse-btn" data-key="littleItems" bindtap="toggleSection">
+          {{collapsedSections.littleItems ? '展开编辑' : '收起'}}
+        </view>
+      </view>
+      <view wx:if="{{collapsedSections.littleItems}}" class="collapsed-summary">已收起 {{littleItems.length}} 条专属小事，展开后可继续排序和编辑。</view>
+      <block wx:else>
+        <block wx:for="{{littleItems}}" wx:key="id">
+          <view class="sort-row {{dragState && dragState.listKey == 'littleItems' && dragState.currentIndex == index ? 'dragging' : ''}}">
+            <input
+              class="sort-input"
+              value="{{item.text}}"
+              data-list="littleItems"
+              data-index="{{index}}"
+              bindinput="updateListItem"
+              disabled="{{saving || saveConflictRefreshing}}"
+              placeholder="写下一件关于她的小事"
+            />
+            <view
+              wx:if="{{index > 0}}"
+              class="top-btn {{saving || saveConflictRefreshing ? 'disabled' : ''}}"
+              data-list="littleItems"
+              data-index="{{index}}"
+              bindtap="moveListItemToTop"
+            >置顶</view>
+            <view
+              class="drag-handle {{saving || saveConflictRefreshing ? 'disabled' : ''}}"
+              data-list="littleItems"
+              data-index="{{index}}"
+              catchtouchstart="startListDrag"
+              catchtouchmove="moveListDrag"
+              catchtouchend="endListDrag"
+              catchtouchcancel="endListDrag"
+            >拖动</view>
+            <view class="remove-btn {{saving || saveConflictRefreshing ? 'disabled' : ''}}" data-list="littleItems" data-index="{{index}}" bindtap="removeListItem">删</view>
+          </view>
+        </block>
+        <view class="add-btn {{saving || saveConflictRefreshing ? 'disabled' : ''}}" data-list="littleItems" bindtap="addListItem">+ 新增专属小事</view>
+      </block>
+    </view>
+
+    <view wx:if="{{saveConflict}}" class="save-conflict-card">
+      <text class="save-conflict-text">另一位编辑者刚保存了新内容。当前草稿仍在这里；读取最新内容会替换这份草稿，请先手动记下差异，再读取并合并。</text>
+      <text wx:if="{{saveConflictRefreshError}}" class="save-conflict-error">{{saveConflictRefreshError}}</text>
+      <view class="save-conflict-retry {{saveConflictRefreshing ? 'disabled' : ''}}" bindtap="retryLoad">{{saveConflictRefreshing ? '正在读取最新内容...' : '读取最新内容'}}</view>
+    </view>
+
+    <view class="save-btn {{saving || saveConflict ? 'disabled' : ''}}" bindtap="saveSettings">{{saving ? '正在保存...' : (saveConflict ? '请先重新加载' : (contentEditor ? '保存专属内容' : '保存全部设置'))}}</view>
+
+    <view wx:if="{{!contentEditor}}" class="card tool-card">
+      <view class="section-head">
+        <text class="section-title">推送与日志</text>
+        <text class="section-tip">剩余 {{settings.subscriptionCount || 0}} 次</text>
+      </view>
+      <view class="tool-grid">
+        <view class="diagnose-btn {{diagnosingReminder ? 'disabled' : ''}}" bindtap="diagnoseReminder">
+          {{diagnosingReminder ? '正在检查...' : '检查自动推送'}}
+        </view>
+        <view class="test-btn {{testingReminder ? 'disabled' : ''}}" bindtap="testReminder">
+          {{testingReminder ? '正在推送...' : '手动测试推送'}}
+        </view>
+      </view>
+      <view class="log-actions">
+        <view class="log-btn {{logsLoading ? 'disabled' : ''}}" bindtap="loadReminderLogs">
+          {{logsLoading ? '正在读取日志...' : '刷新最近日志'}}
+        </view>
+        <view class="log-toggle" bindtap="toggleLogs">
+          {{logsCollapsed ? '展开日志' : '收起日志'}}
+        </view>
+      </view>
+
+      <view wx:if="{{logsLoadError}}" class="log-error">{{logsLoadError}}，点击“刷新最近日志”重试。</view>
+
+      <view wx:if="{{logsCollapsed && reminderLogs.length}}" class="log-collapsed">
+        最近 {{reminderLogs.length}} 条日志已收起，点击“展开日志”查看详情。
+      </view>
+
+      <view wx:elif="{{reminderLogs.length}}" class="log-list">
+        <block wx:for="{{reminderLogs}}" wx:key="logId">
+          <view class="log-item">
+            <view class="log-top">
+              <text class="log-status">{{item.statusText}}</text>
+              <text class="log-time">{{item.timeText}}</text>
+            </view>
+            <text class="log-meta">{{item.modeText}} · {{item.date || '未取到日期'}} · {{item.sendStrategy || 'unknown'}}</text>
+            <text class="log-meta">{{item.quotaText}}</text>
+            <text wx:if="{{item.reasonText}}" class="log-reason">{{item.reasonText}}</text>
+          </view>
+        </block>
+      </view>
+      <view wx:elif="{{logsLoaded && !logsLoadError}}" class="empty-log">暂无推送日志，点击检查或手动测试后会生成记录。</view>
+      <view wx:elif="{{!logsLoaded}}" class="empty-log">日志尚未读取，点击“展开日志”或“刷新最近日志”查看。</view>
+      <view wx:else class="empty-log">最近一次日志刷新失败，已保留上次读取结果。</view>
+    </view>
+
+    <view wx:if="{{!contentEditor}}" class="preview-btn" bindtap="previewMorning">预览早安页</view>
+  </block>
+</view>

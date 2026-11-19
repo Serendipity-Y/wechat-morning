@@ -1,0 +1,106 @@
+<view class="page">
+  <view class="sky">
+    <view class="sun"></view>
+    <view class="cloud cloud-one"></view>
+    <view class="cloud cloud-two"></view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">正在看看今天的天空...</view>
+
+  <view wx:elif="{{loadError}}" class="load-error-card">
+    <text class="load-error-title">今日早安暂时走丢了</text>
+    <text class="load-error-text">{{loadError}}</text>
+    <button class="load-retry-btn" bindtap="retryMorning">重新加载</button>
+  </view>
+
+  <block wx:else>
+    <view class="hero">
+      <text class="date">{{modeTitle}} · {{weather.date}} · {{settings.city}}</text>
+      <text class="greeting">{{greeting}}，{{settings.partnerName}}</text>
+      <text class="weather-line">{{weather.condition}} · {{weather.min}}~{{weather.max}}℃</text>
+      <text class="weather-note">{{weather.note}}，降雨概率 {{weather.rain}}%</text>
+      <text wx:if="{{!weather.fallback}}" class="weather-note">天气数据由 Open-Meteo 提供</text>
+    </view>
+
+    <view class="advice-card">
+      <text class="mini-title">TODAY'S OUTFIT</text>
+      <text class="advice">{{weather.clothing}}</text>
+      <view class="divider"></view>
+      <text class="small-note">出门前再看一眼天气，也别忘了吃早餐。</text>
+    </view>
+
+    <view class="love-card">
+      <text class="quote">“</text>
+      <text class="love-text">{{settings.loveText}}</text>
+      <text class="signature">只想说给你听</text>
+    </view>
+
+    <view wx:if="{{settings.careItems && settings.careItems.length}}" class="care-card">
+      <text class="card-title">今日照顾清单</text>
+      <block wx:for="{{settings.careItems}}" wx:key="*this">
+        <view class="care-item">
+          <text class="care-dot"></text>
+          <text class="care-text">{{item}}</text>
+        </view>
+      </block>
+      <view class="soft-btn" bindtap="subscribeTomorrow">
+        {{subscribing ? '正在预约...' : '我知道啦，预约明天的早安'}}
+      </view>
+    </view>
+
+    <view class="comfort-card">
+      <view class="card-row">
+        <text class="card-title">今日哄哄</text>
+        <text class="card-link">专属抱抱</text>
+      </view>
+      <text class="comfort-text">{{settings.comfortText || '今天也要先照顾好自己。'}}</text>
+    </view>
+
+    <view wx:if="{{daysTogether > 0}}" class="days-card">
+      <text class="days-number">{{daysTogether}}</text>
+      <view class="days-copy">
+        <text class="days-title">我们认识的第 {{daysTogether}} 天</text>
+        <text wx:if="{{loveDays > 0}}" class="days-love">在一起的第 {{loveDays}} 天</text>
+        <text class="days-sub">第一次正式约会：{{firstDateText}}</text>
+      </view>
+    </view>
+
+    <view class="meeting-card" bindtap="goMeeting">
+      <view class="card-row">
+        <text class="card-title">下次见面</text>
+        <text class="card-link">想做的事 ›</text>
+      </view>
+      <text class="meeting-main">正在期待中</text>
+      <text class="meeting-sub">等两个人都有空，再一起去做。</text>
+      <text class="meeting-wish">下次可以：{{settings.meetingWish || '周末一起去逛市集。'}}</text>
+    </view>
+
+    <view class="memory-card" bindtap="goMemory">
+      <view class="card-row">
+        <text class="card-title">我们的记忆碎片</text>
+        <text class="card-link">更多 ›</text>
+      </view>
+      <text class="memory-text">{{settings.memoryText || '还没有添加记忆。'}}</text>
+    </view>
+
+    <text wx:if="{{!preview}}" class="subscribe-note">点击“我知道啦”，明早 7:30 把早安送到这里</text>
+    <text wx:else class="preview-note">这是主人预览模式</text>
+
+    <view wx:if="{{!preview}}" class="content-editor-link" bindtap="goContentEditor">
+      <text>一起编辑我们的专属内容</text>
+      <text class="content-editor-arrow">›</text>
+    </view>
+
+    <view class="little-card" bindtap="goLittleThings">
+      <view class="little-copy">
+        <text class="little-kicker">PRIVATE NOTE</text>
+        <text class="little-title">专属小事</text>
+        <text class="little-desc">点进去看看，我偷偷记住的那些小事。</text>
+      </view>
+      <view class="little-action">
+        <text>去看看</text>
+        <text class="little-arrow">›</text>
+      </view>
+    </view>
+  </block>
+</view>
